@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 5444606030027588261}
   - component: {fileID: 5444606030027588264}
   - component: {fileID: 5444606030027588265}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Agent
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -111,6 +111,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 432cae0bb481ce74e8b90984694f7931, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  currentVelocity: 0
   distForward: 0
   distLeft: 0
   distDiagLeft: 0
@@ -119,13 +120,15 @@ MonoBehaviour:
   rotationSpeed: 300
   speed: 0.5
   minVelocity: 0
-  maxVelocity: 6
-  accelerationRate: 2
+  maxVelocity: 3
+  accelerationRate: 0.2
   decelerationRate: 0.8
   maxViewDistance: 30
-  fitnessTimeDecreaseRate: 0.6
-  fitnessCheckpointIncreaseRate: 5
+  fitnessTimeDecreaseRate: 10
+  fitnessCheckpointIncreaseRate: 100
   fitness: 0
+  outputs: []
+  isActive: 1
 --- !u!143 &5444606030027588265
 CharacterController:
   m_ObjectHideFlags: 0
