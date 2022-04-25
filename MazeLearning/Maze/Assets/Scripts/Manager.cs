@@ -8,8 +8,8 @@ public class Manager : MonoBehaviour
     [SerializeField] private GameObject agentPrefab;
 
     [SerializeField] private Vector3 startPosition = new Vector3(20f, 0, -20);
-    [SerializeField] private int populationSize = 40;
-    [SerializeField] private float timeLimit = 6f;
+    [SerializeField] private int populationSize = 100;
+    [SerializeField] private float timeLimit = 15f;
     private int generationCount = 0;
     private bool isTraining = false;
 
@@ -17,7 +17,7 @@ public class Manager : MonoBehaviour
     private List<NeuralNetwork> nextGeneration = new List<NeuralNetwork>();
     private List<GameObject> agents = null;
 
-    // 6 inputs, 2 outputs, 2 layers
+    // 6 inputs, 2 outputs, 3 layers
     private int[] layers = new[] { 6, 8, 10, 6, 2 };
     
     private float generationFitnessMean = 0f;
