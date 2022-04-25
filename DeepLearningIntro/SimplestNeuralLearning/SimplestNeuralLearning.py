@@ -1,38 +1,41 @@
 
 import numpy as np
-np.random.seed(1) #La generation d'aleatoire sera toujours la meme a chaque execution du programme.
+np.random.seed(1) # Random generation will be the same each time
 
-#Variable dans lesquelles on stockera nos coordonees x et y du graphique
-#Permet de viasualiser efficacement l'evolution du reseau de neuronne
+# Variables to store plot variables
+# Allow to visualize error of the network in function of time
 import matplotlib.pyplot as plt
 xGraphCostFunction=[]
 yGraphCostFunction=[]
 
-#Fonction d'activation sigmoide
+# Neuron activation function: sigmoid
 def sigmoid(x):
     return 1 / (1 + np.exp(-x))
 
-#Derive de notre fonction d'activation
+# Derivative of the activation function
 def sigmoidPrime(x):
     return x * (1 - x)
 
 
-#-------------------   Cree les donnes
-#Donnes d'inputs
+#===================================
+#           Create data
+#===================================
+
+# Input data
 inputs = np.array([ [0, 0, 0, 1],
                     [0, 0, 1, 1],
                     [0, 1, 1, 1],
                     [1, 0, 1, 0],
                     [1, 1, 1, 1]])
 
-#Les outputs qu'on attend
-reponses = np.array([[0],
-                     [0],
-                     [1],
-                     [0],
-                     [1]])
+# Intended output
+answers = np.array([[0],
+                    [0],
+                    [1],
+                    [0],
+                    [1]])
 
-#Donnee d'inputs. On s'en servira une fois que notre reseau aura ete entraine pour verifier qu'il a compris
+# Test data, to check the network is well trained
 inputs_test = np.array([[1, 1, 1, 0],
                         [0, 1, 1, 0],
                         [0, 0, 1, 0],
@@ -40,82 +43,81 @@ inputs_test = np.array([[1, 1, 1, 0],
 #----------------------------------------
 
 
-#------------------   Dimension de notre reseau de neurones
-nb_input_neurons = 4        #Nombre de neurones d'entree
-nb_hidden_neurons = 4       #Nombre de neurones dans le hidden layer
-nb_output_neurons = 1       #Nombre de neurones de sortie
+#------------------   Dimensions of neural network 
+nb_input_neurons = 4
+nb_hidden_neurons = 4
+nb_output_neurons = 1
 #------
 
 
-#Initialise tout nos poids de maniere aleatoire entre -1 et 1
+# Random init for each neuron between -1 and 1
 hidden_layer_weights = 2 * np.random.random((nb_input_neurons, nb_hidden_neurons)) - 1
 output_layer_weights = 2 * np.random.random((nb_hidden_neurons, nb_output_neurons)) - 1
 
 #===================================
-#           Phase d'entrainement
+#           Training Phase
 #===================================
 
-#Nombre d'iteration pour la phase d'entrainement
+# Number of iteration for the training phase
 nb_training_iteration = 10000
 
 for i in range(nb_training_iteration):
 
-    #----------------FEED FORWARD-----------------
-    # Propage nos informations a travers notre reseau de neurones.
+    #---------------- FEED FORWARD -----------------
+    # Broadcast information forward in neural network
 
     input_layer = inputs
-    hidden_layer = sigmoid(np.dot(input_layer, hidden_layer_weights))   #Fonction de feedforward entre l'input layer et le hidden layer
-    output_layer = sigmoid(np.dot(hidden_layer, output_layer_weights))  #Fonction de feedforward entre le hidden layer et l'ouput layer
+    hidden_layer = sigmoid(np.dot(input_layer, hidden_layer_weights))   # Feedforward between input layer and hidden layer
+    output_layer = sigmoid(np.dot(hidden_layer, output_layer_weights))  # Feedforward between hidden layer and ouput layer
 
 
-    # ----------------BACKPROPAGATION-----------------
+    # ---------------- BACKPROPAGATION -----------------
 
-    #calcul du cout pour chacune de nos donnes. Represente a quel point on est loin du resultat attendu.
-    #L'objectif est de le diminuer le plus possible
-    output_layer_error = (reponses - output_layer)
-    print("erreur : " + str(output_layer_error))
+    # Comput cost for each data. The goal is to dimish cost quickly.
+    output_layer_error = (answers - output_layer)
+    print("Error: " + str(output_layer_error))
     # output_layer_error = []
 
-    #Calcul de la valeur avec laquelle on vas corriger nos poids entre le hidden layer et le output layer
+    # Compute a value with which we will correct weights between hidden and output layers
     output_layer_delta = output_layer_error * sigmoidPrime(output_layer)
 
-    #Quels sont les poids entre l'input layer et le hidden layer qui ont  contribues a l'erreur, et dans quelle mesure?
+    # Which are the weights between input and hidden layer that contributed to the cost, in which propotion?
     hidden_layer_error = np.dot(output_layer_delta, output_layer_weights.T)
 
-    #Calcul de la valeur avec laquelle on vas corriger nos poids entre le input layer et le hidden layer
+    # Compute a value with which we will correct weights between input and hidden layers
     hidden_layer_delta = hidden_layer_error * sigmoidPrime(hidden_layer)
 
 
-    #Correction de nos poids
+    # Correct weights
     output_layer_weights += np.dot(hidden_layer.T,output_layer_delta)
     hidden_layer_weights += np.dot(input_layer.T,hidden_layer_delta)
 
-    #Affichage du cout.
+    # Display costs
     if (i % 10) == 0:
-        cout = str(np.mean(np.abs(output_layer_error))) #Calcul de la moyenne de toute les valeurs de notre erreur
-        print("Cout:" + cout)
+        cout = str(np.mean(np.abs(output_layer_error))) # Compute the mean of all errors' values
+        print("Cost:" + cout)
 
-        #Abscisse du graph -> iteration de la boucle d'apprentissage
+        # Graph X -> Iterate through learning loop
         xGraphCostFunction.append(i)
-        #Ordonee du grap -> valeure du cout (arrondis a 3 decimales)
+        # Graph Y -> Cost value (3 numbers after comma)
         v = float("{0:.3f}".format(float(cout)))
         yGraphCostFunction.append(v)
 
 #===================================
-#           Phase de test
+#           Test Phase
 #===================================
 
-# Propage nos informations a travers notre reseau de neurones.
+# Use the trained network with the test data
 input_layer = inputs_test
 hidden_layer = sigmoid(np.dot(input_layer, hidden_layer_weights))
 output_layer = sigmoid(np.dot(hidden_layer, output_layer_weights))
 
-#Affiche le resultat
+# Print result
 print("------")
-print("resultat : ")
+print("Result : ")
 print(str(output_layer))
 
-#Affiche le graphique
+# Display graph
 plt.plot(xGraphCostFunction, yGraphCostFunction)
 plt.show()
 
